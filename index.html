@@ -7,39 +7,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #F8F5F0;
-      --card: #FFFFFF;
-      --ink: #1A1814;
-      --ink-muted: #6B6560;
-      --accent: #C5471B;
-      --accent-light: #FDF0EB;
-      --due-soon: #9B7213;
-      --due-soon-light: #FDF9ED;
-      --overdue: #8B1A1A;
-      --overdue-light: #FDF2F2;
-      --watching: #2A4D18;
-      --watching-light: #EFF6E9;
-      --cal: #1A4B8B;
-      --cal-light: #EDF2FC;
-      --border: #E5E0D8;
-      --radius: 3px;
+      --bg: #F8F5F0; --card: #FFFFFF; --ink: #1A1814; --ink-muted: #6B6560;
+      --accent: #C5471B; --accent-light: #FDF0EB;
+      --due-soon: #9B7213; --due-soon-light: #FDF9ED;
+      --overdue: #8B1A1A; --overdue-light: #FDF2F2;
+      --watching: #2A4D18; --watching-light: #EFF6E9;
+      --cal: #1A4B8B; --cal-light: #EDF2FC;
+      --border: #E5E0D8; --radius: 3px;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      line-height: 1.65;
-      min-height: 100vh;
-    }
+    body { background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.65; min-height: 100vh; }
 
     /* ---- Header ---- */
     .site-header { border-bottom: 2px solid var(--ink); padding: 28px 0 0; }
     .header-inner { max-width: 860px; margin: 0 auto; padding: 0 24px; text-align: center; }
+    .site-name-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
     .site-name { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em; }
+    .beta-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--accent); color: white; padding: 3px 8px; border-radius: 2px; vertical-align: middle; margin-top: -6px; }
     .site-tagline { font-family: 'Playfair Display', serif; font-size: 14px; font-style: italic; color: var(--ink-muted); margin-top: 5px; margin-bottom: 20px; }
     .site-nav { display: flex; justify-content: center; border-top: 1px solid var(--border); margin-top: 4px; }
     .nav-btn { padding: 10px 22px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink-muted); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
@@ -50,10 +34,15 @@
     .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
     .container-wide { max-width: 860px; margin: 0 auto; padding: 0 24px; }
     .main { padding: 40px 0 80px; }
-
-    /* ---- Views ---- */
     .view { display: none; }
     .view.active { display: block; }
+
+    /* ---- Feedback banner ---- */
+    .feedback-banner { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--accent-light); border: 1px solid var(--accent); border-radius: var(--radius); padding: 12px 18px; margin-bottom: 28px; flex-wrap: wrap; }
+    .feedback-banner p { font-size: 13px; color: var(--ink); line-height: 1.5; }
+    .feedback-banner p strong { color: var(--accent); }
+    .feedback-link { font-size: 12px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; border: 1px solid var(--accent); padding: 5px 12px; border-radius: var(--radius); transition: all 0.15s; flex-shrink: 0; }
+    .feedback-link:hover { background: var(--accent); color: white; }
 
     /* ---- Section header ---- */
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
@@ -67,12 +56,31 @@
     .btn-outline:hover { background: var(--ink); color: white; }
     .btn-accent { background: var(--accent); border-color: var(--accent); }
     .btn-accent:hover { background: #a33a14; border-color: #a33a14; }
-    .btn-cal { background: var(--cal); border-color: var(--cal); color: white; }
-    .btn-cal:hover { background: #153d73; border-color: #153d73; }
-    .btn-cal-outline { background: var(--cal-light); border-color: #8AAAD4; color: var(--cal); }
-    .btn-cal-outline:hover { background: var(--cal); color: white; border-color: var(--cal); }
     .btn-ghost { background: none; border: none; color: var(--ink-muted); font-size: 13px; cursor: pointer; padding: 0; font-family: 'Inter', sans-serif; display: inline-flex; align-items: center; gap: 5px; }
     .btn-ghost:hover { color: var(--ink); }
+
+    /* ---- Calendar options ---- */
+    .cal-options { display: flex; gap: 7px; flex-wrap: wrap; }
+    .cal-opt-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; border-radius: var(--radius); cursor: pointer; transition: all 0.15s; text-decoration: none; border: 1.5px solid; white-space: nowrap; }
+    .cal-opt-google { background: #fff; border-color: #4285F4; color: #4285F4; }
+    .cal-opt-google:hover { background: #4285F4; color: white; }
+    .cal-opt-outlook { background: #fff; border-color: #0078D4; color: #0078D4; }
+    .cal-opt-outlook:hover { background: #0078D4; color: white; }
+    .cal-opt-ics { background: #fff; border-color: var(--border); color: var(--ink-muted); }
+    .cal-opt-ics:hover { border-color: var(--ink); color: var(--ink); }
+
+    /* Card-level cal dropdown */
+    .card-cal-wrap { position: relative; }
+    .card-cal-btn { font-size: 11px; font-weight: 500; color: var(--cal); background: var(--cal-light); border: 1px solid #8AAAD4; border-radius: 2px; padding: 3px 9px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; white-space: nowrap; }
+    .card-cal-btn:hover { background: var(--cal); color: white; border-color: var(--cal); }
+    .card-cal-dropdown { position: absolute; bottom: calc(100% + 6px); right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,0.1); padding: 8px; display: none; flex-direction: column; gap: 5px; min-width: 200px; z-index: 100; }
+    .card-cal-dropdown.open { display: flex; }
+    .card-cal-dropdown a, .card-cal-dropdown button { display: block; padding: 7px 11px; font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif; text-decoration: none; border-radius: 2px; text-align: left; cursor: pointer; border: none; width: 100%; transition: background 0.12s; }
+    .card-cal-dropdown a:hover, .card-cal-dropdown button:hover { background: var(--bg); }
+    .card-cal-dropdown .drop-google { color: #4285F4; }
+    .card-cal-dropdown .drop-outlook { color: #0078D4; }
+    .card-cal-dropdown .drop-ics { color: var(--ink-muted); background: none; }
+    .card-cal-dropdown .drop-divider { height: 1px; background: var(--border); margin: 2px 0; }
 
     /* ---- Alert banner ---- */
     .due-alert { display: flex; align-items: flex-start; gap: 14px; background: var(--overdue-light); border: 1px solid #D4A0A0; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px; }
@@ -87,29 +95,21 @@
     .story-card.overdue { border-left-color: var(--overdue); background: var(--overdue-light); }
     .story-card.due-soon { border-left-color: var(--due-soon); background: var(--due-soon-light); }
     .story-card.watching { border-left-color: var(--watching); }
-
     .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; cursor: pointer; }
     .card-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; line-height: 1.3; flex: 1; }
     .status-badge { flex-shrink: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; white-space: nowrap; }
     .badge-overdue { background: var(--overdue-light); color: var(--overdue); border: 1px solid #C88; }
     .badge-due-soon { background: var(--due-soon-light); color: var(--due-soon); border: 1px solid #D4B86A; }
     .badge-watching { background: var(--watching-light); color: var(--watching); border: 1px solid #8AAD6A; }
-
-    .card-notes { margin-top: 8px; font-size: 13px; color: var(--ink-muted); font-style: italic; line-height: 1.5; }
+    .card-notes { margin-top: 8px; font-size: 13px; color: var(--ink-muted); font-style: italic; line-height: 1.5; cursor: pointer; }
     .card-meta { margin-top: 10px; font-size: 12px; color: var(--ink-muted); display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
     .card-meta-left { display: flex; gap: 14px; flex-wrap: wrap; }
-    .card-cal-btn { font-size: 11px; font-weight: 500; color: var(--cal); background: var(--cal-light); border: 1px solid #8AAAD4; border-radius: 2px; padding: 3px 9px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; white-space: nowrap; }
-    .card-cal-btn:hover { background: var(--cal); color: white; border-color: var(--cal); }
 
     /* ---- Empty state ---- */
     .empty-state { text-align: center; padding: 56px 24px; }
     .empty-state h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 12px; }
     .empty-state .lead { color: var(--ink-muted); font-size: 14px; max-width: 400px; margin: 0 auto 28px; line-height: 1.7; }
     .empty-state .pull-quote { margin-top: 40px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: var(--ink-muted); max-width: 400px; margin-left: auto; margin-right: auto; border-top: 1px solid var(--border); padding-top: 28px; line-height: 1.6; }
-
-    /* ---- Cal info strip ---- */
-    .cal-info-strip { display: flex; align-items: flex-start; gap: 14px; background: var(--cal-light); border: 1px solid #8AAAD4; border-radius: var(--radius); padding: 14px 18px; margin-bottom: 28px; font-size: 13px; color: var(--cal); line-height: 1.55; }
-    .cal-info-strip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
 
     /* ---- Explore ---- */
     .explore-header { margin-bottom: 28px; }
@@ -122,8 +122,6 @@
     .filter-pill { padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; background: white; color: var(--ink-muted); transition: all 0.15s; white-space: nowrap; }
     .filter-pill:hover { border-color: var(--ink); color: var(--ink); }
     .filter-pill.active { background: var(--ink); color: white; border-color: var(--ink); }
-
-    .explore-list { }
     .explore-item { display: grid; grid-template-columns: 1fr auto; gap: 12px 24px; align-items: start; padding: 18px 0; border-bottom: 1px solid var(--border); }
     .explore-item:first-child { border-top: 1px solid var(--border); }
     .explore-item-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 5px; }
@@ -137,87 +135,82 @@
     /* ---- About ---- */
     .about-body { max-width: 600px; }
     .about-body h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
-    .about-body p { font-size: 15px; line-height: 1.75; color: var(--ink); margin-bottom: 18px; }
+    .about-body p { font-size: 15px; line-height: 1.75; margin-bottom: 18px; }
     .about-body .pull { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: var(--ink-muted); border-left: 3px solid var(--accent); padding-left: 20px; margin: 28px 0; line-height: 1.6; }
     .about-body h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; margin-top: 32px; margin-bottom: 10px; }
     .about-link { display: inline-block; margin-top: 28px; padding: 12px 24px; background: var(--accent); color: white; border-radius: var(--radius); font-size: 14px; font-weight: 500; text-decoration: none; transition: background 0.15s; }
     .about-link:hover { background: #a33a14; }
 
     /* ---- Modal ---- */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26, 24, 20, 0.55); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,24,20,0.55); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
     .modal-overlay.open { display: flex; }
     .modal { background: var(--card); border-radius: var(--radius); padding: 32px; width: 100%; max-width: 500px; max-height: 92vh; overflow-y: auto; border: 1px solid var(--border); }
     .modal-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 700; margin-bottom: 6px; }
     .modal-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 28px; line-height: 1.55; }
-
-    /* ---- Form ---- */
     .form-group { margin-bottom: 22px; }
     .form-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 7px; }
     .form-input, .form-textarea { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 14px; color: var(--ink); background: white; outline: none; transition: border-color 0.15s; }
     .form-input:focus, .form-textarea:focus { border-color: var(--ink); }
     .form-textarea { resize: vertical; min-height: 72px; }
-
     .interval-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
     .interval-radio { display: none; }
     .interval-lbl { display: block; padding: 9px 4px; text-align: center; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; user-select: none; line-height: 1.3; }
     .interval-radio:checked + .interval-lbl { border-color: var(--ink); background: var(--ink); color: white; }
-
     .checkin-options { display: flex; flex-direction: column; gap: 8px; }
     .checkin-opt-row { display: flex; align-items: flex-start; gap: 11px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: border-color 0.15s; user-select: none; }
     .checkin-opt-row input { margin-top: 3px; flex-shrink: 0; accent-color: var(--ink); }
     .checkin-opt-row:has(input:checked) { border-color: var(--ink); }
     .checkin-opt-text strong { display: block; font-size: 13px; font-weight: 600; }
     .checkin-opt-text span { font-size: 12px; color: var(--ink-muted); }
-
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
 
-    /* ---- Modal success state ---- */
+    /* ---- Modal success ---- */
     .modal-success { text-align: center; padding: 8px 0 4px; }
     .modal-success-icon { font-size: 2.4rem; margin-bottom: 14px; }
     .modal-success h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
     .modal-success p { font-size: 13px; color: var(--ink-muted); margin-bottom: 6px; line-height: 1.6; }
     .modal-success .cal-date { font-weight: 600; color: var(--ink); }
-    .modal-success-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
-    .modal-success-actions .btn { justify-content: center; }
-    .modal-success-hint { font-size: 12px; color: var(--ink-muted); margin-top: 10px; line-height: 1.55; }
+    .modal-success-cal { margin-top: 22px; text-align: left; }
+    .modal-success-cal-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px; display: block; }
+    .modal-success-cal .cal-options { flex-direction: column; }
+    .modal-success-cal .cal-opt-btn { justify-content: center; }
+    .modal-success-skip { margin-top: 14px; display: block; font-size: 12px; color: var(--ink-muted); cursor: pointer; background: none; border: none; font-family: 'Inter', sans-serif; width: 100%; }
+    .modal-success-skip:hover { color: var(--ink); }
+    .modal-success-hint { font-size: 11px; color: var(--ink-muted); margin-top: 10px; line-height: 1.55; text-align: center; }
 
-    /* ---- Check-in view ---- */
+    /* ---- Check-in ---- */
     .checkin-panel { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
     .checkin-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
     .checkin-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
     .checkin-meta-line { font-size: 13px; color: var(--ink-muted); }
     .checkin-saved-note { margin-top: 12px; font-size: 13px; color: var(--ink-muted); font-style: italic; }
-
     hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
-
     .section-h3 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
     .section-desc { font-size: 13px; color: var(--ink-muted); margin-bottom: 14px; }
-
     .search-list { display: flex; flex-direction: column; gap: 7px; }
     .search-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); text-decoration: none; color: var(--ink); font-size: 13px; transition: all 0.15s; }
     .search-link:hover { border-color: var(--ink); background: white; }
     .search-link .ico { font-size: 14px; flex-shrink: 0; }
-
     .digest-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
     .digest-link { display: block; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); text-decoration: none; color: var(--ink); font-size: 13px; font-weight: 500; text-align: center; transition: all 0.15s; }
     .digest-link:hover { border-color: var(--ink); background: white; }
-
     .note-area { width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 14px; min-height: 76px; resize: vertical; margin-top: 10px; outline: none; color: var(--ink); }
     .note-area:focus { border-color: var(--ink); }
-
     .checkin-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); align-items: center; }
-
+    .not-due-msg { font-size: 14px; color: var(--ink-muted); line-height: 1.6; margin-top: 4px; }
     .history-block { margin-top: 28px; }
     .history-item { padding: 12px 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 8px; font-size: 13px; }
     .history-date { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 3px; }
     .history-empty { font-style: italic; color: var(--ink-muted); }
 
-    .not-due-msg { font-size: 14px; color: var(--ink-muted); line-height: 1.6; margin-top: 4px; }
-
     /* ---- Footer ---- */
     .footer-strip { border-top: 1px solid var(--border); padding: 28px 0; margin-top: 52px; text-align: center; }
     .footer-strip p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; color: var(--ink-muted); max-width: 420px; margin: 0 auto 10px; }
-    .footer-strip a { color: var(--ink); font-style: normal; font-weight: 500; }
+    .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+    .footer-links a { font-size: 12px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: var(--ink); }
+    .footer-links .feedback-footer-link { color: var(--accent); font-weight: 500; }
+    .footer-links .feedback-footer-link:hover { color: #a33a14; }
 
     /* ---- Mobile ---- */
     @media (max-width: 560px) {
@@ -233,6 +226,7 @@
       .explore-item { grid-template-columns: 1fr; }
       .interval-grid { grid-template-columns: repeat(3, 1fr); }
       .card-meta { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .card-cal-dropdown { right: auto; left: 0; }
     }
   </style>
 </head>
@@ -240,8 +234,11 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <div class="site-name">Still Watching</div>
-    <div class="site-tagline">Pick the stories that matter. Save them to your calendar. Come back when it counts.</div>
+    <div class="site-name-row">
+      <div class="site-name">Still Watching</div>
+      <span class="beta-badge">Beta</span>
+    </div>
+    <div class="site-tagline">Pick the stories that matter. Set a reminder. Come back when it counts.</div>
     <nav class="site-nav">
       <button class="nav-btn active" onclick="showView('dashboard')">My stories</button>
       <button class="nav-btn" onclick="showView('explore')">Browse stories</button>
@@ -254,6 +251,10 @@
 <div id="view-dashboard" class="view active">
   <div class="container">
     <div class="main">
+      <div class="feedback-banner">
+        <p><strong>This is an early version.</strong> We'd love to know what works and what doesn't.</p>
+        <a class="feedback-link" href="mailto:hello@jacobwarn.com?subject=Still%20Watching%20feedback">Send feedback</a>
+      </div>
       <div id="alert-banner"></div>
       <div class="section-header">
         <span class="section-title">Your stories</span>
@@ -262,7 +263,10 @@
       <div id="story-list"></div>
       <div class="footer-strip">
         <p>"The question is, are things really better? Or am I simply further from the truth?"</p>
-        <a href="https://jacobwarn.substack.com" target="_blank">You've Been Warned - Jacob Warn</a>
+        <div class="footer-links">
+          <a href="https://jacobwarn.substack.com" target="_blank">You've Been Warned - Jacob Warn</a>
+          <a href="mailto:hello@jacobwarn.com?subject=Still%20Watching%20feedback" class="feedback-footer-link">Share feedback</a>
+        </div>
       </div>
     </div>
   </div>
@@ -284,7 +288,7 @@
     <div class="main">
       <div class="explore-header">
         <h2>Stories worth following</h2>
-        <p>Ongoing situations where the follow-up is usually missing from the news cycle. Add any to your watchlist - then save a calendar reminder so you don't forget to look them up.</p>
+        <p>Ongoing situations where the follow-up is usually missing from the news cycle. Add any to your watchlist and save a calendar reminder so you don't forget.</p>
       </div>
       <div class="explore-controls">
         <input class="search-box" type="search" id="explore-search" placeholder="Search stories..." oninput="filterExplore()" />
@@ -306,13 +310,15 @@
       <p>The problem isn't just that we have a limited attention span - it's that our attention is a limited moral resource too. We can only care about a certain number of things. Covid-19 brought that attention closer to home. The invasions of Ukraine and Gaza have pulled it elsewhere again.</p>
       <h3>The gap in how we consume news</h3>
       <p>A train crashes. A building collapses. Floodwaters rise. We talk about it for a few days, and then we move on. We never learn what the conclusion was, what the official response was, or what the results of any investigation might have been. The story gets an opening act, but never a resolution.</p>
-      <p>Still Watching is a small tool to help fix that. Pick a handful of stories that genuinely matter to you, choose when you want to come back to them, and save the date to your calendar. No accounts, no emails, no data collected - just a reminder to yourself to keep paying attention.</p>
+      <p>Still Watching is a small tool to help fix that. Pick a handful of stories that matter to you, choose when you want to come back to them, and add a reminder to your calendar. No accounts, no emails, no data collected - just a nudge to yourself to keep paying attention.</p>
       <h3>How it works</h3>
-      <p>Go to <strong>My stories</strong> and add one or two things you want to follow - or browse curated ongoing stories in <strong>Browse stories</strong>. Set your check-in interval, pick whether you want search prompts or news links when the time comes, and hit <strong>Add to Calendar</strong>. That creates a calendar event on your device with everything you need.</p>
-      <p>When the date arrives, your calendar prompts you. Open the event, follow the search links, and ask: are things actually better now?</p>
+      <p>Go to <strong>My stories</strong> and add something you want to follow - or start from a curated list in <strong>Browse stories</strong>. Set your check-in interval, choose whether you want search prompts or news links when the time comes, and add it straight to your Google Calendar, Outlook, or Apple Calendar. When the date arrives, open the event - everything you need is already there.</p>
       <h3>Your data</h3>
       <p>Still Watching collects no data. Your stories are stored only in your own browser. No emails, no accounts, no tracking. The calendar event lives on your device. Nothing leaves your computer.</p>
-      <a href="https://jacobwarn.substack.com" target="_blank" class="about-link">Read the full essay</a>
+      <h3>Early version</h3>
+      <p>This is a work in progress. If something doesn't work, or you have ideas, please get in touch.</p>
+      <a href="mailto:hello@jacobwarn.com?subject=Still%20Watching%20feedback" class="about-link">Send feedback</a>
+      <a href="https://jacobwarn.substack.com" target="_blank" class="about-link" style="margin-left:10px; background: var(--ink);">Read the full essay</a>
     </div>
   </div>
 </div>
@@ -345,18 +351,9 @@
         <div class="form-group">
           <label class="form-label">When it's time to check in...</label>
           <div class="checkin-options">
-            <label class="checkin-opt-row">
-              <input type="radio" name="ctype" value="prompt" checked>
-              <div class="checkin-opt-text"><strong>Give me search prompts</strong><span>Suggested queries to go and look it up yourself</span></div>
-            </label>
-            <label class="checkin-opt-row">
-              <input type="radio" name="ctype" value="digest">
-              <div class="checkin-opt-text"><strong>Show me news links</strong><span>Direct links to current coverage across sources</span></div>
-            </label>
-            <label class="checkin-opt-row">
-              <input type="radio" name="ctype" value="both">
-              <div class="checkin-opt-text"><strong>Both</strong><span>Search prompts and news source links together</span></div>
-            </label>
+            <label class="checkin-opt-row"><input type="radio" name="ctype" value="prompt" checked><div class="checkin-opt-text"><strong>Give me search prompts</strong><span>Suggested queries to go and look it up yourself</span></div></label>
+            <label class="checkin-opt-row"><input type="radio" name="ctype" value="digest"><div class="checkin-opt-text"><strong>Show me news links</strong><span>Direct links to current coverage across sources</span></div></label>
+            <label class="checkin-opt-row"><input type="radio" name="ctype" value="both"><div class="checkin-opt-text"><strong>Both</strong><span>Search prompts and news source links together</span></div></label>
           </div>
         </div>
         <div class="modal-actions">
@@ -366,58 +363,45 @@
       </form>
     </div>
 
-    <!-- Success state -->
     <div id="modal-success-view" style="display:none;">
       <div class="modal-success">
         <div class="modal-success-icon">&#x2713;</div>
         <h3>Story saved</h3>
         <p>Your check-in is set for <span class="cal-date" id="success-date"></span>.</p>
-        <p>Add it to your calendar now so you don't forget - the event includes your search prompts and a link back to this page.</p>
-        <div class="modal-success-actions">
-          <button class="btn btn-cal" onclick="downloadICSFromSuccess()">&#x1F4C5; Add to Calendar</button>
-          <button class="btn btn-outline" onclick="closeModal()">Done - I'll add the calendar later</button>
+        <p>Add it to your calendar now - the event includes your search prompts and a link back to this page.</p>
+        <div class="modal-success-cal">
+          <span class="modal-success-cal-label">Add to your calendar</span>
+          <div class="cal-options" id="success-cal-options"></div>
+          <div class="modal-success-hint">Works with Google Calendar, Outlook, Apple Calendar, and any other calendar app.</div>
         </div>
-        <div class="modal-success-hint">Works with Apple Calendar, Google Calendar, Outlook, and any other calendar app.</div>
+        <button class="modal-success-skip" onclick="closeModal()">Skip for now</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// ===== DATA =====
 const KEY = 'stillwatching_v1';
 const SITE_URL = 'https://jacob-warn.github.io/stillwatching/';
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
 const save = d => localStorage.setItem(KEY, JSON.stringify(d));
-const uid  = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const uid  = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 const esc  = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 let _lastAddedId = null;
 
-function addMonths(date, n) {
-  const d = new Date(date);
-  d.setMonth(d.getMonth() + n);
-  return d;
-}
-function fmtDate(iso) {
-  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-}
-function intervalLabel(n) {
-  if (n === 1) return '1 month';
-  if (n < 12) return n + ' months';
-  if (n === 12) return '1 year';
-  return (n / 12) + ' years';
-}
+function addMonths(date, n) { const d = new Date(date); d.setMonth(d.getMonth()+n); return d; }
+function fmtDate(iso) { return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+function intervalLabel(n) { if(n===1)return '1 month'; if(n<12)return n+' months'; if(n===12)return '1 year'; return (n/12)+' years'; }
 
 function status(story, forceActive) {
-  if (forceActive) return { type: 'overdue', label: 'Check in now', days: -1 };
-  const now = new Date();
-  const due = new Date(story.nextCheckIn);
-  const days = Math.ceil((due - now) / 86400000);
-  if (days < 0)   return { type: 'overdue',  label: 'Check in now', days };
-  if (days <= 14) return { type: 'due-soon', label: `Due in ${days}d`, days };
-  const months = Math.ceil(days / 30);
-  return { type: 'watching', label: `In ${months} month${months !== 1 ? 's' : ''}`, days };
+  if (forceActive) return { type:'overdue', label:'Check in now', days:-1 };
+  const now = new Date(), due = new Date(story.nextCheckIn);
+  const days = Math.ceil((due-now)/86400000);
+  if (days < 0)   return { type:'overdue',   label:'Check in now', days };
+  if (days <= 14) return { type:'due-soon',  label:`Due in ${days}d`, days };
+  const months = Math.ceil(days/30);
+  return { type:'watching', label:`In ${months} month${months!==1?'s':''}`, days };
 }
 
 // ===== SEARCH / DIGEST =====
@@ -425,152 +409,161 @@ function searchPrompts(title) {
   const yr = new Date().getFullYear();
   const g = q => `https://www.google.com/search?q=${encodeURIComponent(q)}`;
   return [
-    { label: `What happened: "${title}"`,           url: g(title + ' latest update ' + yr) },
-    { label: `Outcome and official response`,        url: g(title + ' outcome response ' + yr) },
-    { label: `Investigation or accountability`,      url: g(title + ' investigation accountability findings') },
-    { label: `Are things better now?`,               url: g('is ' + title + ' better now ' + yr) },
+    { label:`What happened: "${title}"`,      url: g(title+' latest update '+yr) },
+    { label:`Outcome and official response`,   url: g(title+' outcome response '+yr) },
+    { label:`Investigation or accountability`, url: g(title+' investigation accountability findings') },
+    { label:`Are things better now?`,          url: g('is '+title+' better now '+yr) },
   ];
 }
 function digestLinks(title) {
   const e = encodeURIComponent(title);
   return [
-    { label: 'Google News',  url: `https://news.google.com/search?q=${e}` },
-    { label: 'The Guardian', url: `https://www.theguardian.com/search?q=${e}` },
-    { label: 'BBC News',     url: `https://www.bbc.co.uk/search?q=${e}&filter=news` },
-    { label: 'DuckDuckGo',   url: `https://duckduckgo.com/?q=${e}&iar=news&ia=news` },
+    { label:'Google News',  url:`https://news.google.com/search?q=${e}` },
+    { label:'The Guardian', url:`https://www.theguardian.com/search?q=${e}` },
+    { label:'BBC News',     url:`https://www.bbc.co.uk/search?q=${e}&filter=news` },
+    { label:'DuckDuckGo',   url:`https://duckduckgo.com/?q=${e}&iar=news&ia=news` },
   ];
 }
 
-// ===== ICS CALENDAR GENERATION =====
-function escICS(str) {
-  return String(str)
-    .replace(/\\/g, '\\\\')
-    .replace(/;/g, '\\;')
-    .replace(/,/g, '\\,')
-    .replace(/\n/g, '\\n')
-    .replace(/\r/g, '');
+// ===== CALENDAR =====
+function calDescription(story) {
+  const prompts = searchPrompts(story.title);
+  let d = '';
+  d += `STORY\n${story.title}\n\n`;
+  if (story.notes) d += `WHY YOU SAVED THIS\n"${story.notes}"\n\n`;
+  d += `CHECK-IN DATE\n${fmtDate(story.nextCheckIn)}\n\n`;
+  d += `─────────────────────\n`;
+  d += `WHAT TO LOOK UP\n`;
+  d += `─────────────────────\n\n`;
+  prompts.forEach((p, i) => { d += `${i+1}. ${p.label}\n${p.url}\n\n`; });
+  d += `─────────────────────\n`;
+  d += `RETURN TO STILL WATCHING\n`;
+  d += `─────────────────────\n\n`;
+  d += SITE_URL;
+  return d;
 }
-function foldICS(line) {
-  const bytes = unescape(encodeURIComponent(line));
-  if (bytes.length <= 75) return line;
-  let out = '', pos = 0;
-  while (pos < line.length) {
-    let chunk = '';
-    let byteCount = 0;
-    while (pos < line.length) {
-      const char = line[pos];
-      const charBytes = unescape(encodeURIComponent(char)).length;
-      if (byteCount + charBytes > (out ? 74 : 75)) break;
-      chunk += char;
-      byteCount += charBytes;
-      pos++;
-    }
-    out += (out ? '\r\n ' : '') + chunk;
-  }
-  return out;
-}
-function icsDate(date) {
-  // All-day event format
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
+
+function icsDateStr(date) {
+  const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0');
   return `${y}${m}${d}`;
 }
 
+function googleCalUrl(story) {
+  const start = new Date(story.nextCheckIn);
+  const end   = new Date(start); end.setDate(end.getDate()+1);
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text:   `Check in: ${story.title}`,
+    dates:  `${icsDateStr(start)}/${icsDateStr(end)}`,
+    details: calDescription(story),
+    location: SITE_URL,
+  });
+  return `https://calendar.google.com/calendar/render?${params}`;
+}
+
+function outlookCalUrl(story) {
+  const start = new Date(story.nextCheckIn);
+  const end   = new Date(start); end.setDate(end.getDate()+1);
+  const params = new URLSearchParams({
+    path: '/calendar/action/compose',
+    rru: 'addevent',
+    subject: `Check in: ${story.title}`,
+    startdt: start.toISOString().slice(0,10),
+    enddt:   end.toISOString().slice(0,10),
+    body:    calDescription(story),
+  });
+  return `https://outlook.live.com/calendar/0/deeplink/compose?${params}`;
+}
+
 function generateICS(story) {
-  const checkIn = new Date(story.nextCheckIn);
-  const dayAfter = new Date(checkIn);
-  dayAfter.setDate(dayAfter.getDate() + 1);
-
-  const prompts = searchPrompts(story.title);
-  const promptLines = prompts.map((p, i) => `${i + 1}. ${p.label}\\n   ${p.url}`).join('\\n\\n');
-
-  let desc = `Time to check back in on:\\n${story.title}\\n\\n`;
-  if (story.notes) desc += `Why this matters to you:\\n"${story.notes}"\\n\\n`;
-  desc += `Suggested searches:\\n${promptLines}\\n\\n`;
-  desc += `Return to Still Watching:\\n${SITE_URL}\\n\\n`;
-  desc += `---\\nAdded via Still Watching - stillwatching.pages.dev`;
-
-  const now = new Date();
-  const stamp = now.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
-
-  const lines = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Still Watching//EN',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
+  const start = new Date(story.nextCheckIn);
+  const end   = new Date(start); end.setDate(end.getDate()+1);
+  const stamp = new Date().toISOString().replace(/[-:.]/g,'').slice(0,15)+'Z';
+  const escD  = s => s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+  return [
+    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Still Watching//EN','CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
-    foldICS(`UID:${story.id}-${stamp}@stillwatching`),
+    `UID:${story.id}-${stamp}@stillwatching`,
     `DTSTAMP:${stamp}`,
-    `DTSTART;VALUE=DATE:${icsDate(checkIn)}`,
-    `DTEND;VALUE=DATE:${icsDate(dayAfter)}`,
-    foldICS(`SUMMARY:Check in: ${escICS(story.title)}`),
-    foldICS(`DESCRIPTION:${escICS(desc)}`),
-    foldICS(`URL:${SITE_URL}`),
-    'BEGIN:VALARM',
-    'TRIGGER:-P1D',
-    'ACTION:DISPLAY',
-    foldICS(`DESCRIPTION:Reminder - check in on: ${escICS(story.title)}`),
-    'END:VALARM',
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ];
-
-  return lines.join('\r\n');
+    `DTSTART;VALUE=DATE:${icsDateStr(start)}`,
+    `DTEND;VALUE=DATE:${icsDateStr(end)}`,
+    `SUMMARY:Check in: ${escD(story.title)}`,
+    `DESCRIPTION:${escD(calDescription(story))}`,
+    `URL:${SITE_URL}`,
+    'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',
+    `DESCRIPTION:Reminder - check in on: ${escD(story.title)}`,
+    'END:VALARM','END:VEVENT','END:VCALENDAR',
+  ].join('\r\n');
 }
 
 function downloadICS(story) {
-  const ics = generateICS(story);
-  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const blob = new Blob([generateICS(story)], { type:'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const slug = story.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40);
-  a.download = `still-watching-${slug}.ics`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  a.download = `still-watching-${story.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40)}.ics`;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
-function downloadICSFromSuccess() {
-  const stories = load();
-  const s = stories.find(x => x.id === _lastAddedId);
-  if (s) downloadICS(s);
+function calOptionsHTML(story, compact) {
+  if (!story) return '';
+  return `
+    <div class="cal-options">
+      <a class="cal-opt-btn cal-opt-google" href="${esc(googleCalUrl(story))}" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10 10-4.48 10-10z" fill="#4285F4"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="none"/></svg>
+        Google Calendar
+      </a>
+      <a class="cal-opt-btn cal-opt-outlook" href="${esc(outlookCalUrl(story))}" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#0078D4" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="2" fill="#0078D4"/><path d="M13 6h7v12h-7V6zM4 9a4 4 0 108 0A4 4 0 004 9zm4 2a2 2 0 110-4 2 2 0 010 4z" fill="white"/></svg>
+        Outlook
+      </a>
+      <button class="cal-opt-btn cal-opt-ics" onclick="downloadICSStory('${story.id}')">
+        &#x1F4E5; Apple / Other
+      </button>
+    </div>`;
 }
 
-function downloadICSById(id, event) {
-  event && event.stopPropagation();
+function downloadICSStory(id) {
   const s = load().find(x => x.id === id);
   if (s) downloadICS(s);
 }
 
-// ===== CURATED STORIES =====
-const CURATED = [
-  { title: "Greece asylum seeker pushbacks",            tag: "crisis",    desc: "Systematic illegal pushbacks of migrant boats continue despite legal challenges and NGO documentation." },
-  { title: "Valencia DANA floods 2024",                 tag: "climate",   desc: "Over 200 people died in the October 2024 flash floods. Investigations into warnings and official response are ongoing." },
-  { title: "Gaza ceasefire and reconstruction",         tag: "conflict",  desc: "The terms of any ceasefire and what post-war governance and rebuilding will look like remain deeply contested." },
-  { title: "Sudan civil war humanitarian crisis",       tag: "conflict",  desc: "One of the world's worst crises, with millions displaced and aid access severely restricted." },
-  { title: "UK river and coastal sewage discharge",     tag: "climate",   desc: "Record fines for water companies, but illegal discharges continue. Are levels actually improving?" },
-  { title: "Grenfell Tower inquiry recommendations",    tag: "justice",   desc: "The public inquiry reported in 2024. Which recommendations have been implemented? Who has been held accountable?" },
-  { title: "COVID-19 UK public inquiry",                tag: "health",    desc: "What lessons from the inquiry are being applied? Which recommendations have the force of policy?" },
-  { title: "Amazon deforestation under Lula",           tag: "climate",   desc: "Rates improved in 2023 - are gains being sustained, and what is the current picture?" },
-  { title: "Haiti gang control and governance",         tag: "crisis",    desc: "Gangs control large parts of Port-au-Prince. International support, elections, and aid remain unresolved." },
-  { title: "Windrush compensation scheme",              tag: "justice",   desc: "The scheme has paid out a fraction of claims. Thousands still await justice decades after wrongful deportations." },
-  { title: "Myanmar junta and resistance forces",       tag: "conflict",  desc: "Civil war continues. What is the state of resistance, international sanctions, and humanitarian access?" },
-  { title: "Post-Roe abortion access in US states",     tag: "politics",  desc: "State-level laws continue to shift. What is the current landscape of access and ongoing legal challenges?" },
-  { title: "Opioid crisis accountability and funding",  tag: "health",    desc: "Settlements reached with manufacturers. Are funds reaching communities? Is the crisis abating?" },
-  { title: "Channel crossings and search and rescue",   tag: "crisis",    desc: "People continue to die attempting the Channel. What policy and safe route changes have been made?" },
-  { title: "Climate loss and damage fund",              tag: "climate",   desc: "A fund for vulnerable nations was agreed at COP27. How much has been paid in and disbursed?" },
-  { title: "Rohingya genocide - ICJ proceedings",       tag: "justice",   desc: "ICJ hearings continue. What has changed for Rohingya refugees in Bangladesh and beyond?" },
-  { title: "NHS waiting list trends",                   tag: "health",    desc: "Lists peaked at record levels. Which specialties are improving and which are still deteriorating?" },
-  { title: "Tigray peace deal and recovery",            tag: "conflict",  desc: "A deal was signed in 2022. Has aid access improved? What is the humanitarian situation on the ground?" },
-  { title: "EV lithium supply chain labour conditions", tag: "climate",   desc: "Demand for lithium is rising sharply. What are current practices on labour, environment, and sourcing ethics?" },
-  { title: "Infected blood inquiry compensation",       tag: "justice",   desc: "The UK inquiry found a cover-up spanning decades. What is the status of the compensation scheme?" },
-];
+// ===== CARD DROPDOWN =====
+function toggleCalDropdown(id, e) {
+  e && e.stopPropagation();
+  // close all others
+  document.querySelectorAll('.card-cal-dropdown').forEach(d => { if (d.id !== `cal-drop-${id}`) d.classList.remove('open'); });
+  document.getElementById(`cal-drop-${id}`)?.classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.card-cal-dropdown').forEach(d => d.classList.remove('open'));
+});
 
-const ALL_TAGS = ['All', ...([...new Set(CURATED.map(c => c.tag))].sort())];
+// ===== CURATED =====
+const CURATED = [
+  { title:"Greece asylum seeker pushbacks",            tag:"crisis",   desc:"Systematic illegal pushbacks of migrant boats continue despite legal challenges and NGO documentation." },
+  { title:"Valencia DANA floods 2024",                 tag:"climate",  desc:"Over 200 people died in the October 2024 flash floods. Investigations into warnings and official response are ongoing." },
+  { title:"Gaza ceasefire and reconstruction",         tag:"conflict", desc:"The terms of any ceasefire and what post-war governance and rebuilding will look like remain deeply contested." },
+  { title:"Sudan civil war humanitarian crisis",       tag:"conflict", desc:"One of the world's worst crises, with millions displaced and aid access severely restricted." },
+  { title:"UK river and coastal sewage discharge",     tag:"climate",  desc:"Record fines for water companies, but illegal discharges continue. Are levels actually improving?" },
+  { title:"Grenfell Tower inquiry recommendations",    tag:"justice",  desc:"The public inquiry reported in 2024. Which recommendations have been implemented? Who has been held accountable?" },
+  { title:"COVID-19 UK public inquiry",                tag:"health",   desc:"What lessons from the inquiry are being applied? Which recommendations have the force of policy?" },
+  { title:"Amazon deforestation under Lula",           tag:"climate",  desc:"Rates improved in 2023 - are gains being sustained, and what is the current picture?" },
+  { title:"Haiti gang control and governance",         tag:"crisis",   desc:"Gangs control large parts of Port-au-Prince. International support, elections, and aid remain unresolved." },
+  { title:"Windrush compensation scheme",              tag:"justice",  desc:"The scheme has paid out a fraction of claims. Thousands still await justice decades after wrongful deportations." },
+  { title:"Myanmar junta and resistance forces",       tag:"conflict", desc:"Civil war continues. What is the state of resistance, international sanctions, and humanitarian access?" },
+  { title:"Post-Roe abortion access in US states",     tag:"politics", desc:"State-level laws continue to shift. What is the current landscape of access and ongoing legal challenges?" },
+  { title:"Opioid crisis accountability and funding",  tag:"health",   desc:"Settlements reached with manufacturers. Are funds reaching communities? Is the crisis abating?" },
+  { title:"Channel crossings and search and rescue",   tag:"crisis",   desc:"People continue to die attempting the Channel. What policy and safe route changes have been made?" },
+  { title:"Climate loss and damage fund",              tag:"climate",  desc:"A fund for vulnerable nations was agreed at COP27. How much has been paid in and disbursed?" },
+  { title:"Rohingya genocide - ICJ proceedings",       tag:"justice",  desc:"ICJ hearings continue. What has changed for Rohingya refugees in Bangladesh and beyond?" },
+  { title:"NHS waiting list trends",                   tag:"health",   desc:"Lists peaked at record levels. Which specialties are improving and which are still deteriorating?" },
+  { title:"Tigray peace deal and recovery",            tag:"conflict", desc:"A deal was signed in 2022. Has aid access improved? What is the humanitarian situation on the ground?" },
+  { title:"EV lithium supply chain labour conditions", tag:"climate",  desc:"Demand for lithium is rising sharply. What are current practices on labour, environment, and sourcing ethics?" },
+  { title:"Infected blood inquiry compensation",       tag:"justice",  desc:"The UK inquiry found a cover-up spanning decades. What is the status of the compensation scheme?" },
+];
+const ALL_TAGS = ['All',...([...new Set(CURATED.map(c=>c.tag))].sort())];
 let activeTag = 'All';
 
 // ===== DASHBOARD =====
@@ -584,46 +577,53 @@ function renderDashboard() {
     list.innerHTML = `
       <div class="empty-state">
         <h2>Nothing saved yet.</h2>
-        <p class="lead">Add a story or topic you want to return to. Choose when to check back in, then save the date to your calendar - no account needed, no emails, nothing collected.</p>
+        <p class="lead">Add a story you want to return to. Set when to check back in, then save the date to your Google Calendar, Outlook, or Apple Calendar - no account needed, nothing collected.</p>
         <button class="btn btn-accent" onclick="openModal()">+ Add your first story</button>
         <div class="pull-quote">"I ask myself from time to time what news story I have quietly moved on from."</div>
       </div>`;
     return;
   }
 
-  const sorted = [...stories].sort((a, b) => {
-    const order = { overdue: 0, 'due-soon': 1, watching: 2 };
-    const sa = status(a), sb = status(b);
-    return (order[sa.type] - order[sb.type]) || (sa.days - sb.days);
+  const sorted = [...stories].sort((a,b)=>{
+    const order={overdue:0,'due-soon':1,watching:2};
+    const sa=status(a),sb=status(b);
+    return (order[sa.type]-order[sb.type])||(sa.days-sb.days);
   });
 
-  const overdue = sorted.filter(s => status(s).type === 'overdue');
+  const overdue = sorted.filter(s=>status(s).type==='overdue');
   banner.innerHTML = overdue.length ? `
     <div class="due-alert">
       <div class="due-alert-icon">&#x23F0;</div>
       <div>
-        <strong>${overdue.length === 1 ? '1 story is ready' : overdue.length + ' stories are ready'} for a check-in</strong>
-        <span>You saved ${overdue.length === 1 ? 'it' : 'them'} because ${overdue.length === 1 ? 'it' : 'they'} mattered. Still do.</span>
+        <strong>${overdue.length===1?'1 story is ready':overdue.length+' stories are ready'} for a check-in</strong>
+        <span>You saved ${overdue.length===1?'it':'them'} because ${overdue.length===1?'it':'they'} mattered. Still do.</span>
       </div>
     </div>` : '';
 
-  list.innerHTML = `<div class="story-grid">${sorted.map(s => {
-    const st = status(s);
-    const checks = (s.checkins || []).length;
+  list.innerHTML = `<div class="story-grid">${sorted.map(s=>{
+    const st=status(s), checks=(s.checkins||[]).length;
     return `
       <div class="story-card ${st.type}">
         <div class="card-top" onclick="openCheckin('${s.id}')">
           <div class="card-title">${esc(s.title)}</div>
           <span class="status-badge badge-${st.type}">${st.label}</span>
         </div>
-        ${s.notes ? `<div class="card-notes" style="cursor:pointer" onclick="openCheckin('${s.id}')">"${esc(s.notes)}"</div>` : ''}
+        ${s.notes?`<div class="card-notes" onclick="openCheckin('${s.id}')">"${esc(s.notes)}"</div>`:''}
         <div class="card-meta">
           <div class="card-meta-left">
             <span>Saved ${fmtDate(s.addedDate)}</span>
             <span>Check-in: ${fmtDate(s.nextCheckIn)}</span>
-            ${checks ? `<span>${checks} check-in${checks > 1 ? 's' : ''}</span>` : ''}
+            ${checks?`<span>${checks} check-in${checks>1?'s':''}</span>`:''}
           </div>
-          <button class="card-cal-btn" onclick="downloadICSById('${s.id}', event)">&#x1F4C5; Add to Calendar</button>
+          <div class="card-cal-wrap">
+            <button class="card-cal-btn" onclick="toggleCalDropdown('${s.id}', event)">&#x1F4C5; Add to Calendar &#x25BE;</button>
+            <div class="card-cal-dropdown" id="cal-drop-${s.id}">
+              <a href="${esc(googleCalUrl(s))}" target="_blank" rel="noopener" class="drop-google" onclick="document.getElementById('cal-drop-${s.id}').classList.remove('open')">&#x1F4C5; Google Calendar</a>
+              <a href="${esc(outlookCalUrl(s))}" target="_blank" rel="noopener" class="drop-outlook" onclick="document.getElementById('cal-drop-${s.id}').classList.remove('open')">&#x1F4C5; Outlook</a>
+              <div class="drop-divider"></div>
+              <button class="drop-ics" onclick="downloadICSStory('${s.id}'); document.getElementById('cal-drop-${s.id}').classList.remove('open')">&#x1F4E5; Apple / Other (.ics)</button>
+            </div>
+          </div>
         </div>
       </div>`;
   }).join('')}</div>`;
@@ -631,51 +631,40 @@ function renderDashboard() {
 
 // ===== CHECK-IN =====
 function renderCheckin(id, forceActive) {
-  const stories = load();
-  const s = stories.find(x => x.id === id);
+  const stories = load(), s = stories.find(x=>x.id===id);
   if (!s) { backToDashboard(); return; }
+  const st=status(s,forceActive), isActive=st.type==='overdue'||st.type==='due-soon';
+  const showPrompts=s.checkInType==='prompt'||s.checkInType==='both';
+  const showDigest=s.checkInType==='digest'||s.checkInType==='both';
+  const checks=s.checkins||[];
 
-  const st = status(s, forceActive);
-  const isActive = st.type === 'overdue' || st.type === 'due-soon';
-  const showPrompts = s.checkInType === 'prompt' || s.checkInType === 'both';
-  const showDigest  = s.checkInType === 'digest'  || s.checkInType === 'both';
-  const checks = s.checkins || [];
-
-  let html = `<div class="checkin-panel">
-    <div class="checkin-eyebrow">${isActive ? 'Time to check back in' : 'Still watching'}</div>
+  let html=`<div class="checkin-panel">
+    <div class="checkin-eyebrow">${isActive?'Time to check back in':'Still watching'}</div>
     <div class="checkin-title">${esc(s.title)}</div>
-    <div class="checkin-meta-line">
-      Saved ${fmtDate(s.addedDate)}${checks.length ? ` - ${checks.length} previous check-in${checks.length > 1 ? 's' : ''}` : ''}
+    <div class="checkin-meta-line">Saved ${fmtDate(s.addedDate)}${checks.length?` - ${checks.length} previous check-in${checks.length>1?'s':''}`:''}
     </div>
-    ${s.notes ? `<div class="checkin-saved-note">"${esc(s.notes)}"</div>` : ''}
+    ${s.notes?`<div class="checkin-saved-note">"${esc(s.notes)}"</div>`:''}
     <hr class="divider">`;
 
   if (isActive) {
     if (showPrompts) {
-      html += `<div>
-        <div class="section-h3">Suggested searches</div>
+      html+=`<div><div class="section-h3">Suggested searches</div>
         <p class="section-desc">Use these as a starting point - ask yourself what changed, what we learned, whether anything got better.</p>
-        <div class="search-list">
-          ${searchPrompts(s.title).map(p => `
-            <a class="search-link" href="${p.url}" target="_blank" rel="noopener">
-              <span class="ico">&#x1F50D;</span><span>${esc(p.label)}</span>
-            </a>`).join('')}
-        </div>
-      </div>`;
-      if (showDigest) html += `<hr class="divider">`;
+        <div class="search-list">${searchPrompts(s.title).map(p=>`
+          <a class="search-link" href="${p.url}" target="_blank" rel="noopener">
+            <span class="ico">&#x1F50D;</span><span>${esc(p.label)}</span>
+          </a>`).join('')}</div></div>`;
+      if (showDigest) html+=`<hr class="divider">`;
     }
     if (showDigest) {
-      html += `<div>
-        <div class="section-h3">Current coverage</div>
+      html+=`<div><div class="section-h3">Current coverage</div>
         <p class="section-desc">See what has been published recently across these sources.</p>
-        <div class="digest-grid">
-          ${digestLinks(s.title).map(l => `<a class="digest-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('')}
-        </div>
-      </div>`;
+        <div class="digest-grid">${digestLinks(s.title).map(l=>`
+          <a class="digest-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('')}
+        </div></div>`;
     }
-    html += `<hr class="divider">
-      <div>
-        <label class="form-label">What did you find? (optional)</label>
+    html+=`<hr class="divider">
+      <div><label class="form-label">What did you find? (optional)</label>
         <textarea class="note-area" id="note-input" placeholder="A sentence or two on what has changed, what you found, what remains unresolved..."></textarea>
       </div>
       <div class="checkin-actions">
@@ -683,94 +672,85 @@ function renderCheckin(id, forceActive) {
         <button class="btn btn-outline btn-sm" onclick="removeStory('${s.id}')">Remove story</button>
       </div>`;
   } else {
-    html += `
-      <p class="not-due-msg">
-        Your next check-in is <strong>${st.days} days away</strong>, on ${fmtDate(s.nextCheckIn)}.<br>
-        Come back then - or check in early if you've already seen something worth noting.
-      </p>
+    html+=`<p class="not-due-msg">Your next check-in is <strong>${st.days} days away</strong>, on ${fmtDate(s.nextCheckIn)}.<br>
+      Come back then - or check in early if you've already seen something worth noting.</p>
       <div class="checkin-actions" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
-        <button class="btn btn-cal" onclick="downloadICSById('${s.id}', event)">&#x1F4C5; Add to Calendar</button>
-        <button class="btn btn-outline btn-sm" onclick="openCheckin('${s.id}', true)">Check in early</button>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:4px;">Add to your calendar</div>
+          ${calOptionsHTML(s)}
+        </div>
+      </div>
+      <div class="checkin-actions">
+        <button class="btn btn-outline btn-sm" onclick="openCheckin('${s.id}',true)">Check in early</button>
         <button class="btn btn-outline btn-sm" onclick="removeStory('${s.id}')">Remove</button>
       </div>`;
   }
-
-  html += `</div>`;
+  html+=`</div>`;
 
   if (checks.length) {
-    html += `<div class="history-block">
-      <div class="section-header" style="margin-top:32px;">
-        <span class="section-title">Check-in history</span>
-      </div>
-      ${checks.slice().reverse().map(c => `
+    html+=`<div class="history-block">
+      <div class="section-header" style="margin-top:32px;"><span class="section-title">Check-in history</span></div>
+      ${checks.slice().reverse().map(c=>`
         <div class="history-item">
           <div class="history-date">${fmtDate(c.date)}</div>
-          ${c.notes ? `<div>${esc(c.notes)}</div>` : '<div class="history-empty">No notes recorded</div>'}
+          ${c.notes?`<div>${esc(c.notes)}</div>`:'<div class="history-empty">No notes recorded</div>'}
         </div>`).join('')}
     </div>`;
   }
-
   document.getElementById('checkin-content').innerHTML = html;
 }
 
 // ===== EXPLORE =====
 function renderExplore() {
-  const pills = document.getElementById('filter-pills');
-  pills.innerHTML = ALL_TAGS.map(t => `
-    <button class="filter-pill${t === activeTag ? ' active' : ''}" onclick="setTag('${t}')">
-      ${t === 'All' ? 'All' : t.charAt(0).toUpperCase() + t.slice(1)}
+  document.getElementById('filter-pills').innerHTML = ALL_TAGS.map(t=>`
+    <button class="filter-pill${t===activeTag?' active':''}" onclick="setTag('${t}')">
+      ${t==='All'?'All':t.charAt(0).toUpperCase()+t.slice(1)}
     </button>`).join('');
   filterExplore();
 }
-function setTag(t) { activeTag = t; renderExplore(); }
+function setTag(t) { activeTag=t; renderExplore(); }
 function filterExplore() {
-  const q = (document.getElementById('explore-search')?.value || '').toLowerCase();
-  const saved = load().map(s => s.title.toLowerCase());
-  const filtered = CURATED.filter(c => {
-    const matchTag = activeTag === 'All' || c.tag === activeTag;
-    const matchQ = !q || c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q);
-    return matchTag && matchQ;
+  const q=(document.getElementById('explore-search')?.value||'').toLowerCase();
+  const saved=load().map(s=>s.title.toLowerCase());
+  const filtered=CURATED.filter(c=>{
+    const matchTag=activeTag==='All'||c.tag===activeTag;
+    const matchQ=!q||c.title.toLowerCase().includes(q)||c.desc.toLowerCase().includes(q);
+    return matchTag&&matchQ;
   });
-  const listEl = document.getElementById('explore-list');
-  if (!filtered.length) {
-    listEl.innerHTML = `<div class="no-results">No stories match your search.</div>`;
-    return;
-  }
-  listEl.innerHTML = `<div class="explore-list">${filtered.map(c => {
-    const isAdded = saved.includes(c.title.toLowerCase());
-    return `
-      <div class="explore-item">
-        <div>
-          <div class="explore-item-tag">${c.tag}</div>
-          <div class="explore-item-title">${esc(c.title)}</div>
-          <div class="explore-item-desc">${esc(c.desc)}</div>
-        </div>
-        <div>
-          <button class="explore-add-btn${isAdded ? ' added' : ''}"
-            onclick="${isAdded ? '' : `prefillModal('${esc(c.title)}')`}"
-            ${isAdded ? 'disabled' : ''}>
-            ${isAdded ? '&#x2713; Watching' : '+ Add to my stories'}
-          </button>
-        </div>
-      </div>`;
+  const el=document.getElementById('explore-list');
+  if (!filtered.length) { el.innerHTML=`<div class="no-results">No stories match your search.</div>`; return; }
+  el.innerHTML=`<div class="explore-list">${filtered.map(c=>{
+    const isAdded=saved.includes(c.title.toLowerCase());
+    return `<div class="explore-item">
+      <div>
+        <div class="explore-item-tag">${c.tag}</div>
+        <div class="explore-item-title">${esc(c.title)}</div>
+        <div class="explore-item-desc">${esc(c.desc)}</div>
+      </div>
+      <div>
+        <button class="explore-add-btn${isAdded?' added':''}"
+          onclick="${isAdded?'':`prefillModal('${esc(c.title)}')`}"
+          ${isAdded?'disabled':''}>
+          ${isAdded?'&#x2713; Watching':'+ Add'}
+        </button>
+      </div>
+    </div>`;
   }).join('')}</div>`;
 }
 
 // ===== NAVIGATION =====
 function showView(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('onclick').includes(`'${name}'`));
-  });
-  if (name === 'dashboard') { document.getElementById('view-dashboard').classList.add('active'); renderDashboard(); }
-  else if (name === 'explore') { document.getElementById('view-explore').classList.add('active'); renderExplore(); }
-  else if (name === 'about') { document.getElementById('view-about').classList.add('active'); }
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.toggle('active',b.getAttribute('onclick').includes(`'${name}'`));});
+  if (name==='dashboard'){document.getElementById('view-dashboard').classList.add('active');renderDashboard();}
+  else if(name==='explore'){document.getElementById('view-explore').classList.add('active');renderExplore();}
+  else if(name==='about'){document.getElementById('view-about').classList.add('active');}
 }
-function openCheckin(id, forceActive) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+function openCheckin(id,forceActive) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-checkin').classList.add('active');
-  renderCheckin(id, forceActive || false);
+  renderCheckin(id,forceActive||false);
 }
 function backToDashboard() {
   document.getElementById('view-checkin').classList.remove('active');
@@ -781,66 +761,50 @@ function backToDashboard() {
 
 // ===== MODAL =====
 function openModal(prefill) {
-  document.getElementById('modal-form-view').style.display = 'block';
-  document.getElementById('modal-success-view').style.display = 'none';
+  document.getElementById('modal-form-view').style.display='block';
+  document.getElementById('modal-success-view').style.display='none';
   document.getElementById('modal').classList.add('open');
-  document.getElementById('modal-title').textContent = prefill ? 'Add to your stories' : 'Add a story to follow';
-  document.getElementById('f-title').value = prefill || '';
-  document.getElementById('f-notes').value = '';
-  setTimeout(() => (prefill ? document.getElementById('f-notes') : document.getElementById('f-title')).focus(), 60);
+  document.getElementById('modal-title').textContent=prefill?'Add to your stories':'Add a story to follow';
+  document.getElementById('f-title').value=prefill||'';
+  document.getElementById('f-notes').value='';
+  setTimeout(()=>(prefill?document.getElementById('f-notes'):document.getElementById('f-title')).focus(),60);
 }
-function prefillModal(title) { showView('dashboard'); openModal(title); }
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  document.getElementById('add-form').reset();
-}
-function handleOverlayClick(e) { if (e.target === e.currentTarget) closeModal(); }
+function prefillModal(title){showView('dashboard');openModal(title);}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.getElementById('add-form').reset();}
+function handleOverlayClick(e){if(e.target===e.currentTarget)closeModal();}
 
 function handleAdd(e) {
   e.preventDefault();
-  const title       = document.getElementById('f-title').value.trim();
-  const notes       = document.getElementById('f-notes').value.trim();
-  const interval    = parseInt(document.querySelector('input[name="interval"]:checked').value);
-  const checkInType = document.querySelector('input[name="ctype"]:checked').value;
-  const now = new Date();
-  const story = {
-    id: uid(), title, notes,
-    addedDate: now.toISOString(),
-    interval, checkInType,
-    nextCheckIn: addMonths(now, interval).toISOString(),
-    checkins: [],
-  };
-  const stories = load();
-  stories.push(story);
-  save(stories);
-  _lastAddedId = story.id;
-
-  // Show success state
-  document.getElementById('modal-form-view').style.display = 'none';
-  document.getElementById('success-date').textContent = fmtDate(story.nextCheckIn);
-  document.getElementById('modal-success-view').style.display = 'block';
+  const title=document.getElementById('f-title').value.trim();
+  const notes=document.getElementById('f-notes').value.trim();
+  const interval=parseInt(document.querySelector('input[name="interval"]:checked').value);
+  const checkInType=document.querySelector('input[name="ctype"]:checked').value;
+  const now=new Date();
+  const story={id:uid(),title,notes,addedDate:now.toISOString(),interval,checkInType,
+    nextCheckIn:addMonths(now,interval).toISOString(),checkins:[]};
+  const stories=load(); stories.push(story); save(stories);
+  _lastAddedId=story.id;
+  document.getElementById('modal-form-view').style.display='none';
+  document.getElementById('success-date').textContent=fmtDate(story.nextCheckIn);
+  document.getElementById('success-cal-options').innerHTML=calOptionsHTML(story);
+  document.getElementById('modal-success-view').style.display='block';
   renderDashboard();
 }
 
-// ===== ACTIONS =====
 function markCheckedIn(id) {
-  const note = (document.getElementById('note-input')?.value || '').trim();
-  const stories = load();
-  const s = stories.find(x => x.id === id);
-  if (!s) return;
-  s.checkins = s.checkins || [];
-  s.checkins.push({ date: new Date().toISOString(), notes: note });
-  s.nextCheckIn = addMonths(new Date(), s.interval).toISOString();
-  save(stories);
-  backToDashboard();
+  const note=(document.getElementById('note-input')?.value||'').trim();
+  const stories=load(), s=stories.find(x=>x.id===id);
+  if(!s)return;
+  s.checkins=s.checkins||[];
+  s.checkins.push({date:new Date().toISOString(),notes:note});
+  s.nextCheckIn=addMonths(new Date(),s.interval).toISOString();
+  save(stories); backToDashboard();
 }
 function removeStory(id) {
-  if (!confirm('Remove this story?')) return;
-  save(load().filter(s => s.id !== id));
-  backToDashboard();
+  if(!confirm('Remove this story?'))return;
+  save(load().filter(s=>s.id!==id)); backToDashboard();
 }
 
-// ===== INIT =====
 renderDashboard();
 </script>
 </body>
