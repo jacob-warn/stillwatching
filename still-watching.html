@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Still Watching — Follow the stories that matter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F8F5F0;
+      --card: #FFFFFF;
+      --ink: #1A1814;
+      --ink-muted: #6B6560;
+      --accent: #C5471B;
+      --accent-light: #FDF0EB;
+      --due-soon: #9B7213;
+      --due-soon-light: #FDF9ED;
+      --overdue: #8B1A1A;
+      --overdue-light: #FDF2F2;
+      --watching: #2A4D18;
+      --watching-light: #EFF6E9;
+      --border: #E5E0D8;
+      --radius: 3px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* ---- Header ---- */
+    .site-header {
+      border-bottom: 2px solid var(--ink);
+      padding: 28px 0 0;
+    }
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .site-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .site-tagline {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--ink-muted);
+      margin-top: 5px;
+      margin-bottom: 20px;
+    }
+    .site-nav {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+    .nav-btn {
+      padding: 10px 22px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.15s;
+    }
+    .nav-btn:hover { color: var(--ink); }
+    .nav-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+    /* ---- Layout ---- */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .container-wide {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .main { padding: 40px 0 80px; }
+
+    /* ---- Views ---- */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ---- Section header ---- */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      background: var(--ink);
+      color: white;
+      border: 1.5px solid var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .btn:hover { background: #333; border-color: #333; }
+    .btn-sm { padding: 6px 13px; font-size: 12px; }
+    .btn-outline { background: transparent; color: var(--ink); }
+    .btn-outline:hover { background: var(--ink); color: white; }
+    .btn-accent { background: var(--accent); border-color: var(--accent); }
+    .btn-accent:hover { background: #a33a14; border-color: #a33a14; }
+    .btn-ghost {
+      background: none; border: none; color: var(--ink-muted);
+      font-size: 13px; cursor: pointer; padding: 0;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn-ghost:hover { color: var(--ink); }
+
+    /* ---- Alert banner ---- */
+    .due-alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--overdue-light);
+      border: 1px solid #D4A0A0;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+    .due-alert-icon { font-size: 18px; flex-shrink: 0; line-height: 1.6; }
+    .due-alert strong { display: block; font-size: 14px; color: var(--overdue); }
+    .due-alert span { font-size: 13px; color: var(--ink-muted); }
+
+    /* ---- Story cards ---- */
+    .story-grid { display: flex; flex-direction: column; gap: 10px; }
+    .story-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .story-card:hover { border-color: var(--ink); box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+    .story-card.overdue { border-left-color: var(--overdue); background: var(--overdue-light); }
+    .story-card.due-soon { border-left-color: var(--due-soon); background: var(--due-soon-light); }
+    .story-card.watching { border-left-color: var(--watching); }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.3;
+      flex: 1;
+    }
+    .status-badge {
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+    .badge-overdue { background: var(--overdue-light); color: var(--overdue); border: 1px solid #C88; }
+    .badge-due-soon { background: var(--due-soon-light); color: var(--due-soon); border: 1px solid #D4B86A; }
+    .badge-watching { background: var(--watching-light); color: var(--watching); border: 1px solid #8AAD6A; }
+
+    .card-notes {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--ink-muted);
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .card-meta {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--ink-muted);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ---- Empty state ---- */
+    .empty-state {
+      text-align: center;
+      padding: 56px 24px;
+    }
+    .empty-state h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .empty-state .lead {
+      color: var(--ink-muted);
+      font-size: 14px;
+      max-width: 380px;
+      margin: 0 auto 28px;
+    }
+    .empty-state .pull-quote {
+      margin-top: 40px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--ink-muted);
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+      line-height: 1.6;
+    }
+
+    /* ---- Explore stories (browse tab) ---- */
+    .explore-header {
+      margin-bottom: 28px;
+    }
+    .explore-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .explore-header p {
+      font-size: 14px;
+      color: var(--ink-muted);
+      max-width: 500px;
+    }
+    .explore-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      padding: 9px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-box:focus { border-color: var(--ink); }
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-pill {
+      padding: 5px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: white;
+      color: var(--ink-muted);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .filter-pill:hover { border-color: var(--ink); color: var(--ink); }
+    .filter-pill.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+    .explore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .explore-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .explore-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .explore-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.3;
+      flex: 1;
+    }
+    .tag-pill {
+      flex-shrink: 0;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 2px;
+      border: 1px solid;
+    }
+    .tag-crisis    { background: #FDF2F2; color: #8B1A1A; border-color: #C88; }
+    .tag-justice   { background: #EDF3FD; color: #1A3E8B; border-color: #8AAAD4; }
+    .tag-climate   { background: #EFF6E9; color: #2A4D18; border-color: #8AAD6A; }
+    .tag-politics  { background: #FDF9ED; color: #9B7213; border-color: #D4B86A; }
+    .tag-health    { background: #F5EDFD; color: #5A1A8B; border-color: #B48AD4; }
+    .tag-conflict  { background: #FDF0EB; color: #8B3A18; border-color: #D4946A; }
+
+    .explore-desc {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.5;
+      flex: 1;
+    }
+    .explore-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .explore-add-btn {
+      font-size: 12px;
+      padding: 5px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: white;
+      color: var(--ink-muted);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .explore-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .explore-add-btn.added { background: var(--watching-light); border-color: var(--watching); color: var(--watching); cursor: default; }
+
+    .no-results {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--ink-muted);
+      font-style: italic;
+      grid-column: 1 / -1;
+    }
+
+    /* ---- About page ---- */
+    .about-body {
+      max-width: 600px;
+    }
+    .about-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .about-body p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+    .about-body .pull {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--ink-muted);
+      border-left: 3px solid var(--accent);
+      padding-left: 20px;
+      margin: 28px 0;
+      line-height: 1.6;
+    }
+    .about-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 10px;
+    }
+    .about-link {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: white;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .about-link:hover { background: #a33a14; }
+
+    /* ---- Modal ---- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 24, 20, 0.55);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 32px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+    }
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .modal-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 28px; }
+
+    /* ---- Form ---- */
+    .form-group { margin-bottom: 22px; }
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 7px;
+    }
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--ink); }
+    .form-textarea { resize: vertical; min-height: 72px; }
+
+    .interval-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .interval-radio { display: none; }
+    .interval-lbl {
+      display: block;
+      padding: 10px 8px;
+      text-align: center;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .interval-radio:checked + .interval-lbl { border-color: var(--ink); background: var(--ink); color: white; }
+
+    .checkin-options { display: flex; flex-direction: column; gap: 8px; }
+    .checkin-opt-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color 0.15s;
+      user-select: none;
+    }
+    .checkin-opt-row input { margin-top: 3px; flex-shrink: 0; accent-color: var(--ink); }
+    .checkin-opt-row:has(input:checked) { border-color: var(--ink); }
+    .checkin-opt-text strong { display: block; font-size: 13px; font-weight: 600; }
+    .checkin-opt-text span { font-size: 12px; color: var(--ink-muted); }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ---- Check-in view ---- */
+    .checkin-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+    .checkin-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .checkin-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .checkin-meta-line { font-size: 13px; color: var(--ink-muted); }
+    .checkin-saved-note { margin-top: 12px; font-size: 13px; color: var(--ink-muted); font-style: italic; }
+
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+    .section-h3 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+    .section-desc { font-size: 13px; color: var(--ink-muted); margin-bottom: 14px; }
+
+    .search-list { display: flex; flex-direction: column; gap: 7px; }
+    .search-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    .search-link:hover { border-color: var(--ink); background: white; }
+    .search-link .ico { font-size: 14px; flex-shrink: 0; }
+
+    .digest-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+    .digest-link {
+      display: block;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .digest-link:hover { border-color: var(--ink); background: white; }
+
+    .note-area {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      min-height: 76px;
+      resize: vertical;
+      margin-top: 10px;
+      outline: none;
+      color: var(--ink);
+    }
+    .note-area:focus { border-color: var(--ink); }
+
+    .checkin-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .history-block { margin-top: 28px; }
+    .history-item {
+      padding: 12px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .history-date {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 3px;
+    }
+    .history-empty { font-style: italic; color: var(--ink-muted); }
+
+    .not-due-msg { font-size: 14px; color: var(--ink-muted); line-height: 1.6; margin-top: 4px; }
+
+    /* ---- Footer ---- */
+    .footer-strip {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      margin-top: 52px;
+      text-align: center;
+    }
+    .footer-strip p {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--ink-muted);
+      max-width: 420px;
+      margin: 0 auto 10px;
+    }
+    .footer-strip a { color: var(--ink); font-style: normal; font-weight: 500; }
+
+    /* ---- Mobile ---- */
+    @media (max-width: 560px) {
+      .container, .container-wide { padding: 0 16px; }
+      .modal { padding: 24px 18px; }
+      .site-name { font-size: 1.9rem; }
+      .checkin-panel { padding: 24px 18px; }
+      .modal-actions { flex-direction: column-reverse; }
+      .modal-actions .btn { width: 100%; justify-content: center; }
+      .digest-grid { grid-template-columns: 1fr; }
+      .checkin-actions { flex-direction: column; }
+      .checkin-actions .btn { width: 100%; justify-content: center; }
+      .explore-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="site-name">Still Watching</div>
+    <div class="site-tagline">Follow the stories that matter. Don't let them disappear.</div>
+    <nav class="site-nav">
+      <button class="nav-btn active" onclick="showView('dashboard')">My stories</button>
+      <button class="nav-btn" onclick="showView('explore')">Browse stories</button>
+      <button class="nav-btn" onclick="showView('about')">About</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ======== DASHBOARD ======== -->
+<div id="view-dashboard" class="view active">
+  <div class="container">
+    <div class="main">
+      <div id="alert-banner"></div>
+      <div class="section-header">
+        <span class="section-title">Your stories</span>
+        <button class="btn btn-sm btn-accent" onclick="openModal()">+ Add story</button>
+      </div>
+      <div id="story-list"></div>
+      <div class="footer-strip">
+        <p>"The question is, are things really better? Or am I simply further from the truth?"</p>
+        <a href="https://jacobwarn.substack.com" target="_blank">You've Been Warned</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== CHECK-IN VIEW (sub-view of dashboard) ======== -->
+<div id="view-checkin" class="view">
+  <div class="container">
+    <div class="main">
+      <button class="btn-ghost" onclick="backToDashboard()" style="margin-bottom: 24px;">
+        ← All stories
+      </button>
+      <div id="checkin-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== EXPLORE ======== -->
+<div id="view-explore" class="view">
+  <div class="container-wide">
+    <div class="main">
+      <div class="explore-header">
+        <h2>Stories worth following</h2>
+        <p>A curated list of ongoing news stories where the follow-up is usually missing. Add any to your watchlist.</p>
+      </div>
+      <div class="explore-controls">
+        <input class="search-box" type="search" id="explore-search"
+          placeholder="Search stories..." oninput="filterExplore()" />
+        <div class="filter-pills" id="filter-pills"></div>
+      </div>
+      <div class="explore-grid" id="explore-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== ABOUT ======== -->
+<div id="view-about" class="view">
+  <div class="container">
+    <div class="main">
+      <div class="about-body">
+        <h2>Why we forget — and what we can do about it</h2>
+
+        <p>When Alan Kurdi's body washed up on the shores of Turkey, the world was set alight. Global media brought the immediacy of the crisis onto screens worldwide. As a million refugees arrived that year to Greece's islands, volunteer groups and humanitarian relief flooded in.</p>
+
+        <p>Ten years on, most people think things are better. They're not. Sea arrivals have risen to over 40,000 a year — well above 2017-2018 levels. Pushbacks — the forcible and illegal practice of dragging asylum-seeking boats back out of national waters — is commonplace. Funding for non-profits has collapsed. Asylum-seekers live in high-security facilities in the remotest reaches of the islands. Out of sight, out of mind.</p>
+
+        <div class="pull">"It's human for us to look for the happy ending. To imagine that things generally get better over time. Human, but not helpful."</div>
+
+        <p>The problem isn't just that we have a limited attention span — it's that our attention is a limited moral resource too. We can only care about a certain number of things. Covid-19 brought that attention closer to home. The invasions of Ukraine and Gaza have pulled it elsewhere again.</p>
+
+        <h3>The gap in how we consume news</h3>
+
+        <p>A train crashes. A building collapses. Floodwaters rise. We talk about it for a few days, and then we move on. We never learn what the conclusion was, what the official response was, or what the results of any investigation might have been. The story gets an opening act, but never a resolution.</p>
+
+        <p>Still Watching is a small tool to help fix that. You pick a handful of stories that genuinely matter to you, set a check-in date, and we remind you to go looking for the follow-up. Not a flood of notifications — just a quiet prompt, at an interval you choose, to ask: <em>are things actually better now?</em></p>
+
+        <h3>How to use it</h3>
+
+        <p>Go to <strong>My stories</strong> and add one or two things you've been following — or want to follow. Choose whether you'd like to be prompted with search queries, or shown links to current news coverage. Then come back when it's time.</p>
+
+        <p>The <strong>Browse stories</strong> tab has a curated list of ongoing situations where the follow-up is usually absent from the news cycle. You can add any of them to your watchlist with one click.</p>
+
+        <a href="https://jacobwarn.substack.com" target="_blank" class="about-link">
+          Read the full essay →
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== ADD MODAL ======== -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Add a story to follow</div>
+    <div class="modal-sub">Be selective — a few stories you genuinely care about is better than a long list you'll ignore.</div>
+
+    <form id="add-form" onsubmit="handleAdd(event)">
+      <input type="hidden" id="f-prefill" value="" />
+
+      <div class="form-group">
+        <label class="form-label" for="f-title">Story or topic</label>
+        <input class="form-input" type="text" id="f-title"
+          placeholder="e.g. Greece refugee crisis, DANA floods Valencia"
+          required maxlength="140" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="f-notes">Why does this matter to you? (optional)</label>
+        <textarea class="form-textarea" id="f-notes"
+          placeholder="A sentence or two. Helps you remember why you saved it."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Check back in after...</label>
+        <div class="interval-grid">
+          <div>
+            <input type="radio" name="interval" id="i3" value="3" class="interval-radio" checked>
+            <label class="interval-lbl" for="i3">3 months</label>
+          </div>
+          <div>
+            <input type="radio" name="interval" id="i6" value="6" class="interval-radio">
+            <label class="interval-lbl" for="i6">6 months</label>
+          </div>
+          <div>
+            <input type="radio" name="interval" id="i12" value="12" class="interval-radio">
+            <label class="interval-lbl" for="i12">1 year</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">When it's time to check in...</label>
+        <div class="checkin-options">
+          <label class="checkin-opt-row">
+            <input type="radio" name="ctype" value="prompt" checked>
+            <div class="checkin-opt-text">
+              <strong>Give me search prompts</strong>
+              <span>Suggested queries to go and look it up yourself</span>
+            </div>
+          </label>
+          <label class="checkin-opt-row">
+            <input type="radio" name="ctype" value="digest">
+            <div class="checkin-opt-text">
+              <strong>Show me news links</strong>
+              <span>Direct links to current coverage across sources</span>
+            </div>
+          </label>
+          <label class="checkin-opt-row">
+            <input type="radio" name="ctype" value="both">
+            <div class="checkin-opt-text">
+              <strong>Both</strong>
+              <span>Search prompts and news source links together</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-accent">Start watching</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const KEY = 'stillwatching_v1';
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+  catch { return []; }
+}
+function save(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+function addMonths(date, n) {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + n);
+  return d;
+}
+
+function fmtDate(iso) {
+  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function status(story, forceActive) {
+  if (forceActive) return { type: 'overdue', label: 'Check in now', days: -1 };
+  const now = new Date();
+  const due = new Date(story.nextCheckIn);
+  const days = Math.ceil((due - now) / 86400000);
+  if (days < 0) return { type: 'overdue', label: 'Check in now', days };
+  if (days <= 14) return { type: 'due-soon', label: `Due in ${days}d`, days };
+  const months = Math.ceil(days / 30);
+  return { type: 'watching', label: `In ${months} month${months !== 1 ? 's' : ''}`, days };
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===== SEARCH / DIGEST =====
+function searchPrompts(title) {
+  const yr = new Date().getFullYear();
+  const g = q => `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+  return [
+    { label: `What happened: "${title}"`,           url: g(title + ' latest update') },
+    { label: `"${title}" — outcome and response`,    url: g(title + ' outcome response ' + yr) },
+    { label: `Any investigation or accountability?`, url: g(title + ' investigation accountability findings') },
+    { label: `Are things better now?`,               url: g('is ' + title + ' better now ' + yr) },
+  ];
+}
+
+function digestLinks(title) {
+  const e = encodeURIComponent(title);
+  return [
+    { label: 'Google News',  url: `https://news.google.com/search?q=${e}` },
+    { label: 'The Guardian', url: `https://www.theguardian.com/search?q=${e}` },
+    { label: 'BBC News',     url: `https://www.bbc.co.uk/search?q=${e}&filter=news` },
+    { label: 'DuckDuckGo',   url: `https://duckduckgo.com/?q=${e}&iar=news&ia=news` },
+  ];
+}
+
+// ===== CURATED STORIES =====
+const CURATED = [
+  { title: "Greece asylum seeker pushbacks", tag: "crisis",   desc: "Systematic practice of pushing migrant boats back into international waters continues despite legal challenges and NGO documentation." },
+  { title: "Valencia DANA floods 2024",       tag: "climate",  desc: "Over 200 people died in the October 2024 flash floods. Investigations into warnings, infrastructure failures, and official response are ongoing." },
+  { title: "Gaza ceasefire and reconstruction", tag: "conflict", desc: "The terms of any ceasefire and what post-war governance and rebuilding of Gaza will look like remain deeply contested." },
+  { title: "Sudan civil war humanitarian crisis", tag: "conflict", desc: "One of the world's worst humanitarian crises, with millions displaced and aid access severely restricted." },
+  { title: "UK sewage discharge levels",       tag: "climate",  desc: "Water companies have faced record fines, but illegal discharges into rivers and coastal waters continue. Are things improving?" },
+  { title: "Grenfell Tower inquiry recommendations", tag: "justice", desc: "The public inquiry reported in 2024. Which of its recommendations have been implemented? Who has been held accountable?" },
+  { title: "COVID-19 UK public inquiry",       tag: "health",   desc: "The inquiry continues examining pandemic decision-making. What lessons are being learned and applied?" },
+  { title: "Amazon deforestation rates",       tag: "climate",  desc: "Deforestation figures fluctuate year to year. What is the current rate and what policies are in effect?" },
+  { title: "Haiti gang violence and governance", tag: "crisis",  desc: "Gangs control large parts of Port-au-Prince. International support, elections, and the humanitarian situation remain unresolved." },
+  { title: "BBC editorial independence",       tag: "politics", desc: "Concerns over political pressure and editorial decisions. What has changed since the controversies of recent years?" },
+  { title: "Windrush compensation scheme",     tag: "justice",  desc: "The scheme has paid out a fraction of claims. Thousands still await justice. Who has received compensation and who has not?" },
+  { title: "Myanmar military junta resistance", tag: "conflict", desc: "Civil war continues. What is the state of resistance forces, international sanctions, and humanitarian access?" },
+  { title: "Post-Roe abortion access in the US", tag: "politics", desc: "State-level laws continue to shift. What is the current landscape of access and legal challenges?" },
+  { title: "Opioid crisis accountability",     tag: "health",   desc: "Settlements have been reached with manufacturers. Are funds reaching communities? Is the crisis abating?" },
+  { title: "Channel migration deaths",         tag: "crisis",   desc: "People continue to die attempting the Channel crossing. What policy, search and rescue, and safe route changes have been made?" },
+  { title: "Climate loss and damage fund",     tag: "climate",  desc: "A fund for vulnerable nations was agreed at COP27. How much has been paid in and disbursed since?" },
+  { title: "Rohingya genocide accountability", tag: "justice",  desc: "ICJ proceedings continue. What is the current legal status and what has changed for Rohingya refugees in Bangladesh and elsewhere?" },
+  { title: "NHS waiting list crisis",          tag: "health",   desc: "Waiting lists peaked at record levels. What are the current figures and which specialties are seeing improvement or decline?" },
+  { title: "Tigray famine and peace deal",     tag: "conflict", desc: "A peace deal was signed in 2022. Has aid access improved? What is the humanitarian situation now?" },
+  { title: "Lithium mining and EV supply chains", tag: "climate", desc: "Demand for lithium is rising. What are current practices on labour conditions, environmental impact, and sourcing ethics?" },
+];
+
+const TAGS = ['All', ...([...new Set(CURATED.map(c => c.tag))].sort())];
+let activeTag = 'All';
+
+function renderExplore() {
+  const pills = document.getElementById('filter-pills');
+  pills.innerHTML = TAGS.map(t => `
+    <button class="filter-pill${t === activeTag ? ' active' : ''}"
+      onclick="setTag('${t}')">${t.charAt(0).toUpperCase() + t.slice(1)}</button>`).join('');
+  filterExplore();
+}
+
+function setTag(t) { activeTag = t; renderExplore(); }
+
+function filterExplore() {
+  const q = (document.getElementById('explore-search')?.value || '').toLowerCase();
+  const saved = load().map(s => s.title.toLowerCase());
+  const filtered = CURATED.filter(c => {
+    const matchTag = activeTag === 'All' || c.tag === activeTag;
+    const matchQ = !q || c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q);
+    return matchTag && matchQ;
+  });
+
+  const grid = document.getElementById('explore-grid');
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="no-results">No stories match your search.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(c => {
+    const isAdded = saved.includes(c.title.toLowerCase());
+    return `
+      <div class="explore-card">
+        <div class="explore-card-top">
+          <div class="explore-title">${esc(c.title)}</div>
+          <span class="tag-pill tag-${c.tag}">${c.tag}</span>
+        </div>
+        <div class="explore-desc">${esc(c.desc)}</div>
+        <div class="explore-actions">
+          <button class="explore-add-btn${isAdded ? ' added' : ''}"
+            onclick="${isAdded ? '' : `prefillModal('${esc(c.title)}')`}"
+            ${isAdded ? 'disabled' : ''}>
+            ${isAdded ? '✓ Watching' : '+ Add to my stories'}
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ===== DASHBOARD =====
+function renderDashboard() {
+  const stories = load();
+  const list = document.getElementById('story-list');
+  const banner = document.getElementById('alert-banner');
+
+  if (!stories.length) {
+    banner.innerHTML = '';
+    list.innerHTML = `
+      <div class="empty-state">
+        <h2>Nothing saved yet.</h2>
+        <p class="lead">Add a story or topic you genuinely want to return to. Somewhere between two and five is a good number.</p>
+        <button class="btn btn-accent" onclick="openModal()">+ Add your first story</button>
+        <div class="pull-quote">"I ask myself from time to time what news story I have quietly moved on from."</div>
+      </div>`;
+    return;
+  }
+
+  const sorted = [...stories].sort((a, b) => {
+    const order = { overdue: 0, 'due-soon': 1, watching: 2 };
+    const sa = status(a), sb = status(b);
+    return (order[sa.type] - order[sb.type]) || (sa.days - sb.days);
+  });
+
+  const overdue = sorted.filter(s => status(s).type === 'overdue');
+  banner.innerHTML = overdue.length ? `
+    <div class="due-alert">
+      <div class="due-alert-icon">⏰</div>
+      <div>
+        <strong>${overdue.length === 1 ? '1 story is ready' : overdue.length + ' stories are ready'} for a check-in</strong>
+        <span>You saved ${overdue.length === 1 ? 'it' : 'them'} because ${overdue.length === 1 ? 'it' : 'they'} mattered. Still do.</span>
+      </div>
+    </div>` : '';
+
+  list.innerHTML = `<div class="story-grid">${sorted.map(s => {
+    const st = status(s);
+    const checks = (s.checkins || []).length;
+    return `
+      <div class="story-card ${st.type}" onclick="openCheckin('${s.id}')">
+        <div class="card-top">
+          <div class="card-title">${esc(s.title)}</div>
+          <span class="status-badge badge-${st.type}">${st.label}</span>
+        </div>
+        ${s.notes ? `<div class="card-notes">"${esc(s.notes)}"</div>` : ''}
+        <div class="card-meta">
+          <span>Saved ${fmtDate(s.addedDate)}</span>
+          <span>Next check-in: ${fmtDate(s.nextCheckIn)}</span>
+          ${checks ? `<span>${checks} check-in${checks > 1 ? 's' : ''}</span>` : ''}
+        </div>
+      </div>`;
+  }).join('')}</div>`;
+}
+
+// ===== CHECK-IN =====
+function renderCheckin(id, forceActive) {
+  const stories = load();
+  const s = stories.find(x => x.id === id);
+  if (!s) { backToDashboard(); return; }
+
+  const st = status(s, forceActive);
+  const isActive = st.type === 'overdue' || st.type === 'due-soon';
+  const showPrompts = s.checkInType === 'prompt' || s.checkInType === 'both';
+  const showDigest  = s.checkInType === 'digest'  || s.checkInType === 'both';
+  const checks = s.checkins || [];
+
+  let html = `<div class="checkin-panel">
+    <div class="checkin-eyebrow">${isActive ? 'Time to check back in' : 'Still watching'}</div>
+    <div class="checkin-title">${esc(s.title)}</div>
+    <div class="checkin-meta-line">
+      Saved ${fmtDate(s.addedDate)}${checks.length ? ` · ${checks.length} previous check-in${checks.length > 1 ? 's' : ''}` : ''}
+    </div>
+    ${s.notes ? `<div class="checkin-saved-note">"${esc(s.notes)}"</div>` : ''}
+    <hr class="divider">`;
+
+  if (isActive) {
+    if (showPrompts) {
+      html += `<div>
+        <div class="section-h3">Suggested searches</div>
+        <p class="section-desc">Use these as a starting point — ask yourself what changed, what we learned, whether anything got better.</p>
+        <div class="search-list">
+          ${searchPrompts(s.title).map(p => `
+            <a class="search-link" href="${p.url}" target="_blank" rel="noopener">
+              <span class="ico">🔍</span><span>${esc(p.label)}</span>
+            </a>`).join('')}
+        </div>
+      </div>`;
+      if (showDigest) html += `<hr class="divider">`;
+    }
+    if (showDigest) {
+      html += `<div>
+        <div class="section-h3">Current coverage</div>
+        <p class="section-desc">See what's been published recently across these sources.</p>
+        <div class="digest-grid">
+          ${digestLinks(s.title).map(l => `<a class="digest-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('')}
+        </div>
+      </div>`;
+    }
+    html += `<hr class="divider">
+      <div>
+        <label class="form-label">What did you find? (optional)</label>
+        <textarea class="note-area" id="note-input"
+          placeholder="A sentence or two about what has changed, what you found, what you're still unsure about..."></textarea>
+      </div>
+      <div class="checkin-actions">
+        <button class="btn btn-accent" onclick="markCheckedIn('${id}')">
+          Checked in - reschedule for ${s.interval} months
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="removeStory('${id}')">Remove</button>
+      </div>`;
+  } else {
+    html += `<p class="not-due-msg">
+        Your next check-in is <strong>${st.days} days away</strong>, on ${fmtDate(s.nextCheckIn)}.<br>
+        Come back then — or check in early if you've seen something worth noting.
+      </p>
+      <div class="checkin-actions" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+        <button class="btn" onclick="openCheckin('${id}', true)">Check in early</button>
+        <button class="btn btn-outline btn-sm" onclick="removeStory('${id}')">Remove</button>
+      </div>`;
+  }
+
+  html += `</div>`;
+
+  if (checks.length) {
+    html += `<div class="history-block">
+      <div class="section-header" style="margin-top:32px;">
+        <span class="section-title">Check-in history</span>
+      </div>
+      ${checks.slice().reverse().map(c => `
+        <div class="history-item">
+          <div class="history-date">${fmtDate(c.date)}</div>
+          ${c.notes ? `<div>${esc(c.notes)}</div>` : '<div class="history-empty">No notes recorded</div>'}
+        </div>`).join('')}
+    </div>`;
+  }
+
+  document.getElementById('checkin-content').innerHTML = html;
+}
+
+// ===== NAVIGATION =====
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach((b, i) => {
+    b.classList.toggle('active', b.getAttribute('onclick').includes(name));
+  });
+  if (name === 'dashboard') {
+    document.getElementById('view-dashboard').classList.add('active');
+    renderDashboard();
+  } else if (name === 'explore') {
+    document.getElementById('view-explore').classList.add('active');
+    renderExplore();
+  } else if (name === 'about') {
+    document.getElementById('view-about').classList.add('active');
+  }
+}
+
+function openCheckin(id, forceActive) {
+  document.getElementById('view-dashboard').classList.remove('active');
+  document.getElementById('view-checkin').classList.add('active');
+  renderCheckin(id, forceActive || false);
+}
+
+function backToDashboard() {
+  document.getElementById('view-checkin').classList.remove('active');
+  document.getElementById('view-dashboard').classList.add('active');
+  renderDashboard();
+}
+
+// ===== MODAL =====
+function openModal(prefill) {
+  document.getElementById('modal').classList.add('open');
+  if (prefill) {
+    document.getElementById('f-title').value = prefill;
+    document.getElementById('modal-title').textContent = 'Add to your stories';
+  } else {
+    document.getElementById('f-title').value = '';
+    document.getElementById('modal-title').textContent = 'Add a story to follow';
+  }
+  setTimeout(() => {
+    if (!prefill) document.getElementById('f-title').focus();
+    else document.getElementById('f-notes').focus();
+  }, 50);
+}
+
+function prefillModal(title) {
+  showView('dashboard');
+  openModal(title);
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('add-form').reset();
+}
+
+function handleOverlayClick(e) {
+  if (e.target === e.currentTarget) closeModal();
+}
+
+function handleAdd(e) {
+  e.preventDefault();
+  const title = document.getElementById('f-title').value.trim();
+  const notes = document.getElementById('f-notes').value.trim();
+  const interval = parseInt(document.querySelector('input[name="interval"]:checked').value);
+  const checkInType = document.querySelector('input[name="ctype"]:checked').value;
+  const now = new Date();
+
+  const story = {
+    id: uid(),
+    title,
+    notes,
+    addedDate: now.toISOString(),
+    interval,
+    checkInType,
+    nextCheckIn: addMonths(now, interval).toISOString(),
+    checkins: [],
+  };
+
+  const stories = load();
+  stories.push(story);
+  save(stories);
+  closeModal();
+  renderDashboard();
+}
+
+// ===== ACTIONS =====
+function markCheckedIn(id) {
+  const note = (document.getElementById('note-input')?.value || '').trim();
+  const stories = load();
+  const s = stories.find(x => x.id === id);
+  if (!s) return;
+  s.checkins = s.checkins || [];
+  s.checkins.push({ date: new Date().toISOString(), notes: note });
+  s.nextCheckIn = addMonths(new Date(), s.interval).toISOString();
+  save(stories);
+  backToDashboard();
+}
+
+function removeStory(id) {
+  if (!confirm('Remove this story? Your check-in history will be deleted too.')) return;
+  save(load().filter(s => s.id !== id));
+  backToDashboard();
+}
+
+// ===== INIT =====
+renderDashboard();
+</script>
+
+</body>
+</html>
